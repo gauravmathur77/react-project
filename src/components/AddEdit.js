@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {postValues} from '../services/form.service';
+import { postValues } from '../services/form.service';
 
 export default class AddEdit extends Component {
     constructor() {
@@ -9,17 +9,17 @@ export default class AddEdit extends Component {
             name: '',
             salary: '',
             age: '',
-            errors : {
+            errors: {
 
             },
-            loading : false
+            loading: false
         };
 
         this.onSubmit = this.onSubmit.bind(this);
     }
 
     componentDidMount() {
-        if(this.props.location.pathname.indexOf('edit') > -1) {
+        if (this.props.location.pathname.indexOf('edit') > -1) {
             if (Object.keys(this.props.location.state.values).length > 0) {
                 this.setState({
                     name: this.props.location.state.values.title,
@@ -34,33 +34,33 @@ export default class AddEdit extends Component {
     render() {
         return (
             <div >
-                {this.state.loading && (
-                   <h1>Loading...</h1> 
+                {this.state?.loading && (
+                    <h1>Loading...</h1>
                 )}
                 <form onSubmit={this.onSubmit}>
                     <div className="form-row">
                         <div className="form-group col-md-3">
                             <label>Name</label>
                             <input className="form-control" type='text' value={this.state.name} name='name' onChange={this.onChangeEvent}></input>
-                            {this.state.errors?.name?.length > 0 && (
-                               <div className='error' >{this.state.errors?.name}</div>
-                            )} 
+                            {this.state?.errors?.name?.length > 0 && (
+                                <div className='error' >{this.state.errors?.name}</div>
+                            )}
                         </div>
                         <div className="form-group col-md-3">
                             <label>Salary</label>
                             <input className="form-control" type='text' value={this.state.salary} name='salary' onChange={this.onChangeEvent}></input>
-                            {this.state.errors?.salary?.length > 0 && (
-                               <div >{this.state.errors?.salary}</div>
-                            )} 
+                            {this.state?.errors?.salary?.length > 0 && (
+                                <div >{this.state.errors?.salary}</div>
+                            )}
                         </div>
                         <div className="form-group col-md-3">
                             <label>Age</label>
                             <input className="form-control" type='text' value={this.state.age} name='age' onChange={this.onChangeEvent}></input>
-                            {this.state.errors?.age?.length > 0 && (
-                               <div >{this.state.errors?.age}</div>
-                            )} 
+                            {this.state?.errors?.age?.length > 0 && (
+                                <div >{this.state.errors?.age}</div>
+                            )}
                         </div>
-                    </div>                   
+                    </div>
                     <input type='submit' name='submit' ></input>
                 </form>
             </div>
@@ -71,24 +71,24 @@ export default class AddEdit extends Component {
         event.preventDefault();
         let valid = true;
         let errors = {}
-        if(!this.state.name){
-           errors['name']= 'Name is required';
+        if (!this.state.name) {
+            errors['name'] = 'Name is required';
             valid = false;
-        } 
-        if(!this.state.salary){
-           errors['salary'] = 'Salary is required';
+        }
+        if (!this.state.salary) {
+            errors['salary'] = 'Salary is required';
             valid = false;
-        } 
-        if(!this.state.age){
-           errors['age'] = 'Age is required';
+        }
+        if (!this.state.age) {
+            errors['age'] = 'Age is required';
             valid = false;
-        } 
+        }
         this.setState({
-            errors : errors
+            errors: errors
         })
-        if(valid) {
+        if (valid) {
             this.setState({
-                loading : true
+                loading: true
             })
             delete this.state.errors
             this.postData();
@@ -103,7 +103,7 @@ export default class AddEdit extends Component {
 
     async postData() {
         await postValues(this.state).then((response) => {
-            if(response) {
+            if (response) {
                 this.props.history.push('/list')
             }
         })
