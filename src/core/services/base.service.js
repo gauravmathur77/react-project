@@ -1,4 +1,4 @@
-import { errorHandle } from './exception.service';
+import { errorHandler } from './exception.service';
 import constants from '../constants/system.constants';
 
 
@@ -27,7 +27,7 @@ export const post = (url, request) => {
     }).then(response => {
         return processResponse(response)
     }).catch(err => {
-        errorHandle(err)
+        errorHandler(err)
         return err;
     })
 }
@@ -39,7 +39,7 @@ export const get = (url) => {
     }).then(response => {
         return processResponse(response)
     }).catch(err => {
-        errorHandle(err)
+        errorHandler(err)
         return err;
     })
 }
@@ -52,7 +52,7 @@ export const _delete = (url) => {
     }).then(response => {
         return processResponse(response)
     }).catch(err => {
-        errorHandle(err)
+        errorHandler(err)
         return err;
     })
 }
