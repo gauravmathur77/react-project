@@ -5,6 +5,8 @@ import {
 
 import { Spinner } from 'react-bootstrap';
 
+
+import { log } from '../core/services/logger.service';
 import { getValues, deleteValues } from '../services/form.service';
 
 
@@ -66,6 +68,7 @@ export default class Listing extends Component {
     }
 
     async getData() {
+        log({"hello" : "go"})
         await getValues().then((res) => {
             if (res && res.length > 0) {
                 this.responseHtml = res.map((item) => <tr key={item.id}>
