@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,18 +6,23 @@ import {
   Link
 } from "react-router-dom";
 
+import env from './environments/index';
 import { Greet } from './components/Greet';
 import Welcome from './components/Welcome';
 import Parent from './components/Parent';
-import Form from './components/AddEdit';
-import Listing from './components/Listing';
-import View from './components/View';
 import './App.css';
+
+const Listing = lazy(() => import('./components/Listing'));
+const Form = lazy(() => import('./components/AddEdit'));
+const View = lazy(() => import('./components/View'));
+
 
 class App extends Component {
   render() {
+    console.log(env.env)
     return (
       <Router>
+        <Suspense fallback={<div>Loading...</div>}>
         <div className="App">
           <ul>
             <li>
@@ -49,8 +54,12 @@ class App extends Component {
             </Route>
             <Route path="/">
             </Route>
+            <Route>
+              <h1>Not found</h1> 
+            </Route>
           </Switch>
         </div>
+        </Suspense>
       </Router>
     );
   }

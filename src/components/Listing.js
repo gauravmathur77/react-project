@@ -3,7 +3,10 @@ import {
     Link
 } from "react-router-dom";
 
-import { getValues } from '../services/form.service';
+import { Spinner } from 'react-bootstrap';
+
+import { getValues, deleteValues } from '../services/form.service';
+
 
 export default class Listing extends Component {
     constructor(props) {
@@ -18,13 +21,18 @@ export default class Listing extends Component {
     }
 
     componentDidMount() {
+        this.setState({
+            loading: true
+        })
         this.getData();
     }
 
     render() {
         return (
             <div>
-
+                {this.state.loading && (
+                    <Spinner animation="border" role="status" />
+                )}
                 <div>
                     <Link to="/add">Add</Link>
                 </div>
@@ -59,8 +67,7 @@ export default class Listing extends Component {
 
     async getData() {
         await getValues().then((res) => {
-            if (res) {
-
+            if (res && res.length > 0) {
                 this.responseHtml = res.map((item) => <tr key={item.id}>
                     <td>
                         {item.id}
@@ -91,11 +98,28 @@ export default class Listing extends Component {
                                 Edit
                             </button>
                         </Link>
+                        <button onClick={() => this.delete(item.id)}>Delete</button>
                     </td>
                 </tr>)
                 this.setState({
-                    response: res
+                    response: res,
+                    loading: false
                 })
+            } else {
+                this.setState({
+                    loading: false
+                })
+            }
+        })
+    }
+
+    async delete(id) {
+        this.setState({
+            loading: true
+        })
+        await deleteValues(id).then((response) => {
+            if (response) {
+                this.getData()
             }
         })
     }

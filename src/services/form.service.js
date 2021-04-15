@@ -1,19 +1,16 @@
+import { get, post, _delete } from '../core/services/base.service'
 
 const API_URL = 'https://jsonplaceholder.typicode.com/posts';
 
-export const postValues =  (values) => {
-   return fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values)
-    }).then(response => response.json())
+export const postValues = (values) => {
+    return post(API_URL, values)
+}
+
+export const getValues = () => {
+    return get(API_URL)
 }
 
 
-
-export const getValues =  () => {
-    return fetch(API_URL, {
-         method: 'GET',
-         headers: { 'Content-Type': 'application/json' }
-     }).then(response => response.json())
- }
+export const deleteValues = (id) => {
+    return _delete(`${API_URL}/${id}`)
+}
