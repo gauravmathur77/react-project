@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { postValues } from '../services/form.service';
 
+import { ToasterContext } from '../shared/ToasterContext';
+
 export default class AddEdit extends Component {
+
+    static contextType = ToasterContext;
+
     constructor() {
         super();
 
@@ -16,10 +21,13 @@ export default class AddEdit extends Component {
         };
 
         this.onSubmit = this.onSubmit.bind(this);
+
+        this.pageName = '';
     }
 
     componentDidMount() {
         if (this.props.location.pathname.indexOf('edit') > -1) {
+            this.pageName = 'edit';
             if (Object.keys(this.props.location.state.values).length > 0) {
                 this.setState({
                     name: this.props.location.state.values.title,
@@ -27,6 +35,8 @@ export default class AddEdit extends Component {
                     age: 12,
                 })
             }
+        } else {
+            this.pageName = 'add';
         }
 
     }
@@ -104,8 +114,22 @@ export default class AddEdit extends Component {
     async postData() {
         await postValues(this.state).then((response) => {
             if (response) {
+                this.setToaster();
+                this.props.history.push('/list')
+            }
+        }).catch((err) => {
+            if(err.status  === 201) {
+                this.setToaster();
                 this.props.history.push('/list')
             }
         })
+    }
+
+    setToaster() {
+        if(this.pageName == 'add') {
+            this.context.setToaster({'show' : true , 'message' : "Value Added  Successfully", "type" : "Success"})
+        } else {
+            this.context.setToaster({'show' : true , 'message' : "Value Editted Successfully", "type" : "Success"})
+        }
     }
 }

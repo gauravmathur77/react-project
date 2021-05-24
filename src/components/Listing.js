@@ -6,17 +6,23 @@ import {
 import { Spinner } from 'react-bootstrap';
 
 
-import { log } from '../core/services/logger.service';
+import { AlertContext } from '../shared/AlertContext';
+import { ToasterConsumer } from '../shared/ToasterContext';
+import Toaster from '../shared/Toaster';
 import { getValues, deleteValues } from '../services/form.service';
 
 
 export default class Listing extends Component {
+
+    static contextType = AlertContext
+
     constructor(props) {
         super(props)
 
         this.state = {
             loading: false,
-            response: []
+            response: [],
+            error: ""
         }
 
         this.responseHtml = '';
@@ -29,46 +35,8 @@ export default class Listing extends Component {
         this.getData();
     }
 
-    render() {
-        return (
-            <div>
-                {this.state.loading && (
-                    <Spinner animation="border" role="status" />
-                )}
-                <div>
-                    <Link to="/add">Add</Link>
-                </div>
-
-                <table className="table table-responsive table-bordered">
-                    <thead>
-                        <tr>
-                            <td>
-                                Id
-                        </td>
-                            <td>
-                                User Id
-                        </td>
-                            <td>
-                                Title
-                        </td>
-                            <td>
-                                Body
-                        </td>
-                            <td>
-                                Actions
-                        </td>
-                        </tr>
-                    </thead>
-                    {this.responseHtml.length > 0 && (<tbody id="my-cart-body">
-                        {this.responseHtml}
-                    </tbody>)}
-                </table>
-            </div>
-        )
-    }
 
     async getData() {
-        log({"hello" : "go"})
         await getValues().then((res) => {
             if (res && res.length > 0) {
                 this.responseHtml = res.map((item) => <tr key={item.id}>
@@ -113,6 +81,11 @@ export default class Listing extends Component {
                     loading: false
                 })
             }
+        }).catch((error) => {
+            this.setState({
+                loading: false
+            })
+            this.context.setError({ 'show': true, 'message': "Some error has Occurred", "showOk": false })
         })
     }
 
@@ -125,5 +98,64 @@ export default class Listing extends Component {
                 this.getData()
             }
         })
+    }
+
+
+
+    render() {
+        const { ok } = this.context
+        return (
+            <div>
+
+                {this.state.loading && (
+                    <Spinner animation="border" role="status" />
+                )}
+                <div>
+                    <Link to="/add">Add</Link>
+                </div>
+                <ToasterConsumer>
+                    {value => (
+                        <div>
+                            {
+                                value.show && (
+                                    <Toaster message={value.message} setToaster = {value.setToaster}  type={value.type}></Toaster>
+                                )
+                            }
+                        </div>
+
+                    )}
+                </ToasterConsumer>
+
+                <table className="table table-responsive table-bordered">
+                    <thead>
+                        <tr>
+                            <td>
+                                Id
+                        </td>
+                            <td>
+                                User Id
+                        </td>
+                            <td>
+                                Title
+                        </td>
+                            <td>
+                                Body
+                        </td>
+                            <td>
+                                Actions
+                        </td>
+                        </tr>
+                    </thead>
+                    {this.responseHtml.length > 0 && (<tbody id="my-cart-body">
+                        {this.responseHtml}
+                    </tbody>)}
+                </table>
+                {
+                    ok && (
+                        this.handleOk()
+                    )
+                }
+            </div>
+        )
     }
 }

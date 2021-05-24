@@ -10,6 +10,7 @@ export default class View extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props)
         if (Object.keys(this.props.location.state.values).length > 0) {
             this.setState({
                 details: this.props.location.state.values

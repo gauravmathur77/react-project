@@ -28,7 +28,7 @@ export const post = (url, request) => {
         return processResponse(response)
     }).catch(err => {
         errorHandler(err)
-        return err;
+        throw err;
     })
 }
 
@@ -40,7 +40,7 @@ export const get = (url) => {
         return processResponse(response)
     }).catch(err => {
         errorHandler(err)
-        return err;
+        throw err;
     })
 }
 
@@ -53,6 +53,6 @@ export const _delete = (url) => {
         return processResponse(response)
     }).catch(err => {
         errorHandler(err)
-        return err;
+        throw err;
     })
 }
